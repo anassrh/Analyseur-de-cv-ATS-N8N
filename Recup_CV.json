@@ -1,0 +1,1341 @@
+{
+  "name": "Recup_CV",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cv-extraction",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f2c11802-df82-49be-a076-b4f0b88fcfd6",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -5740,
+        -420
+      ],
+      "webhookId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const file = $binary.data;\nconst ext = file.fileExtension?.toLowerCase();\nconst mime = file.mimeType?.toLowerCase();\n\nconst allowedMime = [\n  'application/pdf',\n  'application/msword',\n  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',\n  'image/png',\n  'image/jpeg'\n];\nconst allowedExt = ['pdf', 'doc', 'docx', 'png', 'jpg','jpeg'];\n\nif (!allowedMime.includes(mime) || !allowedExt.includes(ext)) {\n  throw new Error(`Invalid file type: ${mime} / .${ext}`);\n}\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4320,
+        -420
+      ],
+      "id": "dca594ca-fc73-4c0b-98ef-828674541874",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.documentUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -5520,
+        -420
+      ],
+      "id": "158eb555-5f1a-4d1a-be2e-6a51e774718c",
+      "name": "Recuperation Supabase"
+    },
+    {
+      "parameters": {
+        "content": "## Vérification Mime Type\n",
+        "height": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4400,
+        -560
+      ],
+      "id": "3355e324-a61b-4658-a0d0-283dd292fd2f",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Verification de la qualité du document \nTrouver une grille d'evaluation de la qualité du fichier",
+        "height": 300,
+        "width": 860,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5300,
+        -560
+      ],
+      "typeVersion": 1,
+      "id": "37c12d46-ea6c-41c8-adb3-d058655979bb",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupération des données binaires du fichier depuis l'item\nconst base64 = items[0].binary.data.data;        // contenu binaire du fichier (Buffer/base64)\nconst fichier = Buffer.from(base64, 'base64'); // vrai buffer\nconst nomFichier = items[0].binary.data.fileName; // nom original du fichier (ex: \"CV_JaneDoe.pdf\")\nconst tailleOctets = fichier.length; // taille en octets\nconst tailleKo = Math.round(tailleOctets / 1024);\n\n// Extension du fichier en minuscules (ex: \"pdf\" ou \"docx\")\nlet extension = \"inconnue\";\nif (nomFichier && nomFichier.includes('.')) {\n  extension = nomFichier.split('.').pop().toLowerCase();\n}\n\n// Évaluation du format et compatibilité basique\nlet scoreFormat = 0, noteCompat = \"\", scoreCompat = 0;\nif (extension === \"pdf\") {\n  scoreFormat = 1;    // Par exemple: 1 = format attendu\n  noteCompat = \"Bonne compatibilité (PDF reconnu universellement)\";\n  scoreCompat = 1;    // PDF = plein score pour compatibilité\n} else if (extension === \"docx\") {\n  scoreFormat = 1;    // Format accepté (docx)\n  noteCompat = \"Compatibilité correcte (format Word standard)\";\n  scoreCompat = 0.8;  // légèrement moindre que PDF en score, par ex.\n} else {\n  scoreFormat = 0.5;  // Autres formats moins souhaitables\n  noteCompat = \"Compatibilité incertaine (format moins standard)\";\n  scoreCompat = 0.5;\n}\n\n// Évaluation du nom de fichier (s'il est explicite)\n// On considère le nom générique s'il contient \"Document\" sans personnalisation, par ex.\nlet scoreNom = 1;\nlet remarqueNom = \"Nom de fichier correct\";\nif (nomFichier.match(/document\\d*\\.?[^.]*$/i) || nomFichier.toLowerCase().startsWith(\"document\")) {\n  scoreNom = 0;\n  remarqueNom = \"Nom de fichier générique (ex: 'Document1' détecté)\";\n}\n\n// Ajout des informations et scores dans l'item JSON pour usage ultérieur\nitems[0].json = {\n  nomFichier: nomFichier,\n  extension: extension,\n  tailleKo: tailleKo,\n  score_poids: 1,           // on peut donner 1 (ou une note sur 5) si le fichier est d'un poids raisonnable\n  score_format: scoreFormat,\n  note_compatibilite: noteCompat,\n  score_compatibilite: scoreCompat,\n  score_nomFichier: scoreNom,\n  remarque_nomFichier: remarqueNom\n};\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5240,
+        -420
+      ],
+      "id": "1b070705-33ac-432c-8e2d-327f311e3c0f",
+      "name": "informations du fichier"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tentative 1 : récupération directe de l'extension si présente\nlet extension = items[0].json.extension?.toLowerCase();\n\n// Tentative 2 : récupération depuis le nom de fichier\nif (!extension && items[0].binary?.data?.fileName) {\n  const fileName = items[0].binary.data.fileName;\n  extension = fileName.split('.').pop().toLowerCase();\n}\n\n// Lecture base64 du fichier\nconst base64Data = items[0].binary.data.data;\nlet integriteOK = false;\nlet remarqueIntegrite = \"\";\n\ntry {\n  const buffer = Buffer.from(base64Data, 'base64');\n\n  if (extension === \"pdf\") {\n    const dataStr = buffer.toString(\"latin1\");\n    const startOK = dataStr.startsWith(\"%PDF-\");\n    const endOK = dataStr.includes(\"%%EOF\");\n\n    if (startOK && endOK) {\n      integriteOK = true;\n      remarqueIntegrite = \"Fichier PDF valide (structure de base OK)\";\n    } else {\n      remarqueIntegrite = `PDF incomplet : ${!startOK ? \"début incorrect\" : \"\"}${!startOK && !endOK ? \" et \" : \"\"}${!endOK ? \"fin manquante (%%EOF)\" : \"\"}`;\n    }\n\n  } else if (extension === \"docx\") {\n    const signature = buffer.toString('hex', 0, 2); // 2 premiers octets\n    if (signature === \"504b\") {\n      integriteOK = true;\n      remarqueIntegrite = \"Fichier DOCX valide (signature ZIP détectée)\";\n    } else {\n      remarqueIntegrite = \"DOCX invalide ou corrompu (signature ZIP absente)\";\n    }\n\n  } else {\n    integriteOK = true;\n    remarqueIntegrite = \"Format non reconnu\";\n  }\n\n} catch (err) {\n  integriteOK = false;\n  remarqueIntegrite = `Erreur lors de l’analyse : ${err.message}`;\n}\n\n// Ajout des champs en sortie\nitems[0].json.score_integrite = integriteOK ? 1 : 0;\nitems[0].json.remarque_integrite = remarqueIntegrite;\nitems[0].json.extension_detectee = extension;\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5000,
+        -420
+      ],
+      "id": "6ee1f58f-6e7e-40bc-88e4-60acf8ae31f8",
+      "name": "intégrité du fichier"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = items[0].json;\nlet scoreGlobal = 0;\nlet totalCriteres = 0;\nconst lignes = [];\n\nfunction ajouteCritere(nom, score, remarque) {\n  scoreGlobal += score;\n  totalCriteres += 1;\n  lignes.push(`- **${nom}** : ${remarque} – *Score: ${score}*`);\n}\najouteCritere(\"Compatibilité du format\", data.score_compatibilite, data.note_compatibilite);\najouteCritere(\"Score brut du format\", data.score_format, \"Format reconnu = PDF/PNG, moins bon = autres\");\najouteCritere(\"Poids du fichier (\" + data.tailleKo + \" Ko)\", data.score_poids, data.tailleKo + \" Ko (taille du fichier)\");\n\najouteCritere(\"Nom du fichier\", data.score_nomFichier, data.remarque_nomFichier);\najouteCritere(\"Intégrité du fichier\", data.score_integrite, data.remarque_integrite);\najouteCritere(\"Accessibilité du texte\", data.score_accessibilite, data.remarque_accessibilite);\n\nconst scorePourcent = Math.round((scoreGlobal / totalCriteres) * 100);\nlignes.push(`\\n<!--SCORE_GLOBAL--> **Score global** : ${scoreGlobal}/${totalCriteres} (${scorePourcent}%)`);\n\nitems[0].json.rapport = lignes.join(\"\\n\");\n\n// ✅ Champ structuré pour usage programmatique\nitems[0].json.score_global = {\n  valeur: scoreGlobal,\n  total: totalCriteres,\n  pourcentage: scorePourcent\n};\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4600,
+        -420
+      ],
+      "id": "2aa9764b-b55a-4930-b053-20852b1f4028",
+      "name": "Evaluation"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text}}",
+        "options": {
+          "systemMessage": "Tu es un assistant expert en structuration de données issues de CV.\n\nTu dois remplir un JSON brut strictement conforme au format défini en dessous à partir des données fournis extraite d'un CV. \nLes données ne sont pas forcément dans le bon ordre, tu dois trouver quelles informations appartiennent à qui.\nTu dois faire en sorte que le plus de données soient extraites et insérées dans le JSON au bon endroit.\n\nCe JSON sera exploité par une application front via n8n. Aucun commentaire, texte, ou explication ne doit précéder ou suivre l'objet JSON.\n\n🎯 RÈGLES OBLIGATOIRES À SUIVRE :\n\nStructure exacte à respecter (hiérarchie, noms, types, champs obligatoires ou nullables).\n\nEfforce toi de trouver des éléments dans chaque catégorie, elle peut avoir d'autres noms, d'autres appellations.\n\nAucune génération de valeur factice : ne crée jamais d’identifiants arbitraires.\n\nRespect strict des types et formats : dates en YYYY-MM-DD ou null, valeurs numériques, chaînes, booléens.\n\nSi plusieurs phrases, paragraphes ou éléments décrivent une même expérience, les concaténer dans une chaîne unique.\n\nAide toi de l'outil Think pour trouver les informations pertinente aux bons endroits.\n\nIl faut absolument que tu laisses les champs de \"jobHistory\" vide, focalise toi sur les autres catégories.\n\n➤ Chaque élément doit être précédé du caractère • et séparé par un retour à la ligne (\\n).\n\n➤ Exemple de format final :\n\n\"description\": \"• Tâche 1\\n• Tâche 2\\n• Tâche 3\"\nNe pas utiliser de crochets [] ni de guillemets multiples.\n\n📅 DÉDUCTION DES DATES (à appliquer systématiquement) :\n\nCas 1 : Une année seule est mentionnée\n➤ Pour un début : année-09-01\n➤ Pour une fin : année-06-30\n\nCas 2 : Seule une date de fin est donnée\n➤ Déduis la date de début comme : année_fin - 1-09-01\n\nCas 3 : Aucune date identifiable\n➤ Remplace la valeur par null\n⚠️ Ne jamais utiliser \"UNKNOWN\" ou un string \"null\" pour un champ de date.\n\n🧠 DÉDUCTION DU CHAMP field :\n\nSi le domaine de formation ou spécialité n’est pas explicitement donné, déduis le à partir du diplôme, de l’école, ou de la description.\n\nN’utilise \"UNKNOWN\" que si aucune déduction n’est raisonnablement possible.\n\n🔍 BALAYAGE COMPLET DU CV PAR CATÉGORIE :\n\n➤ Pour chaque catégorie (educationEntries, workExperienceEntries, skills, languages, certifications), tu dois extraire TOUS les éléments du CV qui y sont liés, même si :\n\nL’intitulé est partiel ou implicite.\nL’information est redondante ou répétée dans différentes parties du CV.\nL’intitulé de la rubrique ne correspond pas littéralement (ex : “formation” au lieu d’“éducation”, “parcours académique”, “langues et certifications”, etc.).\n\n➤ Tu dois donc analyser TOUT le contenu du CV pour y détecter chaque formation, expérience, compétence, langue ou certification.\n\n➤ Aucune donnée ne doit être oubliée dans les sections educationEntries, workExperienceEntries, skills, languages et certifications. Ne jamais te contenter d’un seul bloc du CV, mais balayer l’ensemble du contenu pour trouver chaque occurrence potentielle.\n\nTu dois fournir un effort supplémentaire pour les catégories educationEntries, workExperienceEntries et skills.  \n\nAides toi de l'outil Think pour y arriver.\n\n📦 FORMAT JSON À PRODUIRE :\n\n{\n  \"personalInfo\": {\n    \"name\": \"string\",\n    \"email\": \"string\",\n    \"phone\": \"string\",\n    \"address\": \"string\",\n    \"linkedin\": \"string\",\n    \"created_at\": \"ISODate\",\n    \"updated_at\": \"ISODate\"\n  },\n  \"educationEntries\": [\n    {\n      \"institution\": \"string\",\n      \"degree\": \"string\",\n      \"field\": \"string (mettre 'UNKNOWN' si inconnu ou null)\",\n      \"start_date\": \"YYYY-MM-DD|null\",\n      \"end_date\": \"YYYY-MM-DD|null\",\n      \"ongoing\": true,\n      \"description\": \"string|null\",\n      \"created_at\": \"ISODate\",\n      \"updated_at\": \"ISODate\"\n    }\n  ],\n  \"workExperienceEntries\": [\n    {\n      \"company\": \"string\",\n      \"position\": \"string\",\n      \"start_date\": \"YYYY-MM-DD|null\",\n      \"end_date\": \"YYYY-MM-DD|null\",\n      \"ongoing\": true,\n      \"description\": \"string\",\n      \"location\": \"string\",\n      \"created_at\": \"ISODate\",\n      \"updated_at\": \"ISODate\"\n    }\n  ],\n  \"skills\": [\n    {\n      \"name\": \"string\",\n      \"category\": \"string\",\n      \"source\": \"explicit|implicit\",\n      \"confidence\": 0.0,\n      \"experience_duration\": \"integer\",\n      \"last_used\": \"ISODate\",\n      \"created_at\": \"ISODate\",\n      \"updated_at\": \"ISODate\"\n    }\n  ],\n  \"languages\": [\n    {\n      \"language\": \"string\",\n      \"proficiency\": \"string\",\n      \"created_at\": \"ISODate\",\n      \"updated_at\": \"ISODate\"\n    }\n  ],\n  \"certifications\": [\n    {\n      \"name\": \"string\",\n      \"issuer\": \"string\",\n      \"date\": \"YYYY-MM-DD|null\",\n      \"expiry_date\": \"YYYY-MM-DD|null\",\n      \"created_at\": \"ISODate\",\n      \"updated_at\": \"ISODate\"\n    }\n  ],\n \n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -3120,
+        -440
+      ],
+      "id": "e7ea4682-56c3-4c68-b406-dd49f670d39c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3200,
+        -220
+      ],
+      "id": "6b98ebd5-b7b3-434e-8390-3ac9e264f8f5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "3M4PHChdmtsA904Z",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e808e481-78d2-4172-9dac-9f40e3e92010",
+              "leftValue": "={{ $json.score_integrite }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4460,
+        -180
+      ],
+      "id": "b051698f-3a75-4a6c-b8fc-99dd39864d8a",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Votre CV n'est pas traitable"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        -4240,
+        -180
+      ],
+      "id": "5d76bc66-30ac-4dd1-80a3-ee7e0a72f706",
+      "name": "Stop and Error2"
+    },
+    {
+      "parameters": {
+        "content": "## Gestions des erreurs\n\n \n",
+        "height": 200,
+        "width": 460,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4540,
+        -240
+      ],
+      "id": "fe052be2-9c27-41c9-9a5c-d882b354c5ad",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$binary.data.fileExtension}}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f6568061-1574-4300-8f4c-3601fc51c01e"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e48db1ae-2c9d-497f-ba1a-7b9ccae11d0d",
+                    "leftValue": "={{$binary.data.fileExtension}}",
+                    "rightValue": "doc",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DOC"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f2a6c467-b31c-4209-a438-de0ed4177fd7",
+                    "leftValue": "={{$binary.data.fileExtension}}",
+                    "rightValue": "jpeg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "JPEG"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e27615db-0965-4594-8201-7efe2ceaf479",
+                    "leftValue": "={{$binary.data.fileExtension}}",
+                    "rightValue": "jpg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "JPG"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "61cb3f70-d9d4-4071-83a6-1310d9b4b8c8",
+                    "leftValue": "={{$binary.data.fileExtension}}",
+                    "rightValue": "png",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PNG"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -4020,
+        -460
+      ],
+      "id": "eabfe504-4249-45a0-8332-70085e3af4cb",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "description": "🛠️ Aide à l’extraction structurée de données de CV :\n\nObjectif :\nAnalyser un texte issu d’un CV et en extraire rigoureusement les informations personnelles, formations, expériences professionnelles, compétences, langues et certifications, selon des règles de structuration strictes.\n\nRègles fondamentales à respecter :\n\nNe jamais inventer ou compléter les champs manquants.\nLaisser explicitement null ou \"UNKNOWN\" uniquement si AUCUNE information claire ne permet de déduire une valeur.\n\nExtraire le maximum d’éléments réels détectables dans les bonnes catégories :\n\nUne expérience de stage est une expérience professionnelle.\n\nUn diplôme avec une école = une entrée en formation.\n\nUne compétence mentionnée dans une mission ou une section dédiée = compétence.\n\nFormats obligatoires à respecter :\n\nDates : YYYY-MM-DD\n➤ Année seule : début = année-09-01 ; fin = année-06-30\n➤ Date de fin seule : début = année_fin - 1-09-01\n➤ Pas de date identifiable = null\n\nDescription : concaténer toutes les phrases liées à une expérience ou une formation en une seule chaîne, séparées par \\n et commençant par •\n\nChamps created_at et updated_at : utiliser la date et l’heure ISO actuelles.\n\nLogique de remplissage des catégories :\n\npersonalInfo : nom, e-mail, téléphone, adresse, LinkedIn\n\neducationEntries : écoles, diplômes, années, domaine d’étude (ou déduction), description\n\nworkExperienceEntries : entreprises, postes, périodes, missions, lieu\n\nskills : extraire toutes compétences techniques, outils, frameworks, langages\n\nlanguages : langues parlées et leur niveau\n\ncertifications : nom, organisme, date d’obtention, expiration\n\nNe jamais toucher à jobHistory.\nCette section doit rester vierge : valeurs par défaut (ex. chaînes vides, 0, null, etc.)\n\nConfidence dans les skills :\n\nSi compétence clairement citée = 0.9\n\nSi déduite d’un poste ou projet = 0.7\n\nSi implicite sans détails techniques = 0.5\n\nExpérience en mois (experience_duration) :\n\n1 an = 12, 2 ans = 24, 6 mois = 6, etc.\n\nSi durée non indiquée, estimer de façon prudente ou mettre 0 si non déductible.\n\nBUT :\nFournir à l'IA une analyse fiable, exploitable automatiquement, sans erreurs de typage ou structure.\n\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -2920,
+        -220
+      ],
+      "id": "e8998de4-4cd3-4e15-a4b9-b9d164c2d39d",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "0p5SH6mccKOpGeVb",
+          "mode": "list",
+          "cachedResultName": "Recup_PDF"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -3600,
+        -720
+      ],
+      "id": "1ce54e62-0dce-4a76-b604-d0305b2827cf",
+      "name": "PDF"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "1uHJV1JyuxpmI4vq",
+          "mode": "list",
+          "cachedResultName": "Recup_DOC"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -3600,
+        -520
+      ],
+      "id": "4b068797-709b-49be-b0fe-d149efcd1cf4",
+      "name": "DOC"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "pKa2oqD7LPGRiRyh",
+          "mode": "list",
+          "cachedResultName": "Recup_JPG"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -3600,
+        -340
+      ],
+      "id": "292b0201-d441-47e0-8d13-ffe9d3f5b976",
+      "name": "JPG"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "KXXldtFuEtaQPcrU",
+          "mode": "list",
+          "cachedResultName": "Recup_PNG"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -3600,
+        -160
+      ],
+      "id": "22ed0714-f827-42f1-9a03-ef7ab600942f",
+      "name": "PNG"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "BKPiHgeoc8YAUX6k",
+          "mode": "list",
+          "cachedResultName": "Enregistrement_CV"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": "=true"
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1580,
+        -440
+      ],
+      "id": "7a4c92a5-4483-4370-b178-86ef5319256f",
+      "name": "Supabase",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook Trigger').item.json.body.userId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -3060,
+        -220
+      ],
+      "id": "a985b7f7-241b-479a-9a13-5e5983d9ba1c",
+      "name": "Simple Memory1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "let ext = items[0].json.extension?.toLowerCase();\nif (!ext && items[0].binary?.data?.fileName) {\n  const fileName = items[0].binary.data.fileName;\n  ext = fileName.split('.').pop().toLowerCase();\n}\n\nconst base64Data = items[0].binary.data.data;\nlet accessTexte = false;\nlet scoreAcces = 0;\nlet remarque = \"\";\n\ntry {\n  const buffer = Buffer.from(base64Data, \"base64\");\n\n  if (ext === \"pdf\") {\n    const dataStr = buffer.toString(\"latin1\");\n\n    // Vérifie s'il y a des fontes et pas que des images\n    const hasFont = /\\/Font\\b/.test(dataStr);\n    const hasImage = /\\/Image\\b/.test(dataStr);\n\n    if (!hasFont && hasImage) {\n      accessTexte = false;\n      scoreAcces = 0;\n      remarque = \"PDF uniquement composé d'images (aucune fonte détectée)\";\n    } else {\n      // Nettoyage du contenu\n      const cleaned = dataStr\n        .replace(/<[^>]+>/g, '')\n        .replace(/[^A-Za-zÀ-ÿ\\s]/g, ' ')\n        .replace(/\\s+/g, ' ')\n        .trim();\n\n      const words = cleaned.split(' ').filter(w => w.length >= 4);\n      const uniqueWords = [...new Set(words)];\n      const totalChars = words.join('').length;\n\n      if (uniqueWords.length >= 20 && totalChars > 200) {\n        accessTexte = true;\n        scoreAcces = 1;\n        remarque = `Texte exploitable détecté : ${uniqueWords.length} mots uniques (~${totalChars} caractères nettoyés)`;\n      } else {\n        remarque = \"Pas de contenu textuel exploitable (texte insuffisant ou bruit OCR)\";\n      }\n    }\n  } else if (ext === \"docx\") {\n    accessTexte = true;\n    scoreAcces = 1;\n    remarque = \"Texte accessible (format Word)\";\n  } else {\n    remarque = \"Format non vérifié automatiquement\";\n  }\n\n} catch (err) {\n  remarque = `Erreur d'analyse : ${err.message}`;\n}\n\n// Résultat\nitems[0].json.accessibilite_textuelle = accessTexte;\nitems[0].json.score_accessibilite = scoreAcces;\nitems[0].json.remarque_accessibilite = remarque;\nitems[0].json.extension_detectee = ext;\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4800,
+        -420
+      ],
+      "id": "d6b7043e-0208-4cdc-9d45-5a8f18fec705",
+      "name": "Texte accessible"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        -560
+      ],
+      "id": "ff291271-1bb9-4f83-9fb1-c7a47e29d2c0",
+      "name": "Respond to Webhook Missing"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 202
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        -120
+      ],
+      "id": "48f381ae-0643-4fa3-b0a7-5bbbf78baba2",
+      "name": "Respond to Webhook Errors Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst errors = $input.all().map(item => item.json.Errors.errors);\nconst block = $input.all().map(item => item.json.Errors.block);\n\nreturn [{\n  json: {\n    status: \"error\",\n    errors: errors,\n    block : block\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -380
+      ],
+      "id": "d485609b-2481-49ff-a014-04e21f656935",
+      "name": "Errors Parsing"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst errors = $input.all().map(item => item.json.Missings);\nconst block = $input.all().map(item => item.json.Missings.block);\n\nreturn [{\n  json: {\n    status: \"warning\",\n    errors: errors,\n    block : block\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -560
+      ],
+      "id": "46c2410c-fe7c-477b-acec-944d72d181b3",
+      "name": "Missing Parsing"
+    },
+    {
+      "parameters": {
+        "jsCode": "const errorMessage = $input.all().map(item => item.json.error) || \"Une erreur inconnue est survenue.\";\nreturn [{\n  json: {\n    status: \"error\",\n    message: errorMessage\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -140
+      ],
+      "id": "56db7757-5940-470e-b6cd-36ac018cf161",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "content": "## Envoi des Missings et erreurs des noeuds Sous-Workflow Supabase\n",
+        "height": 760,
+        "width": 1300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1060,
+        -980
+      ],
+      "id": "31b86904-ac13-48c2-ab97-16683bf2182f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Missings }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "d8e6c491-eec6-4df0-b62f-56c62d198ec1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Missings"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d2eae932-6281-41cf-ab0c-7d6625f09fdf",
+                    "leftValue": "={{ $json.Errors }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Errors"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -880,
+        -460
+      ],
+      "id": "c0692fed-ab85-4342-a524-d1e6c25c74b3",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -120,
+        -560
+      ],
+      "id": "6f742e0b-b003-4306-b0ee-2f40768e4ee1",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawJson = $('Recup ID').first().json.output; // adapte selon où est le JSON\nreturn [{\n  json: JSON.parse(rawJson)\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -740
+      ],
+      "id": "74ad9c68-6535-4a6a-aa4f-dd5c1479ded0",
+      "name": "Parsing"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -120,
+        -120
+      ],
+      "id": "f6eeda25-27fe-40dc-98c9-8a5fd55681e9",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawJson = $('Recup ID').first().json.output; // adapte selon où est le JSON\nreturn [{\n  json: JSON.parse(rawJson)\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -580,
+        140
+      ],
+      "id": "d6d13c8d-02ee-4d48-8237-c102a0dbc099",
+      "name": "Parsing1"
+    },
+    {
+      "parameters": {
+        "content": "## Envoi des erreurs workflow\n",
+        "height": 520,
+        "width": 1300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1060,
+        -180
+      ],
+      "id": "905f078f-0829-492d-902f-2bd4769a2319",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Sous workflows de récupération de données du CV en fonction de son mimetype et de son évaluation\n",
+        "height": 1180,
+        "width": 740,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4040,
+        -960
+      ],
+      "id": "7b7a142b-f5b2-4d8d-b28a-6f5057d95acd",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Extraction et structuration de la donnée par l'IA\n",
+        "height": 540,
+        "width": 1020,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3240,
+        -620
+      ],
+      "id": "77e4c881-d348-4715-b199-4d87512cad2e",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Sous workflow d'enregistrement de la donnée structurée dans supabase avec gestions des erreurs\n\n",
+        "height": 380,
+        "width": 360,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1700,
+        -620
+      ],
+      "id": "b6092c75-289d-4c64-be4a-2ac9662b0f7c",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## Envoie JSON de la donnée pour appel API\n\n",
+        "height": 280,
+        "width": 220,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -620,
+        -860
+      ],
+      "id": "fecef852-14f7-49a7-80c9-f004e6ec43df",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## Envoie JSON de la donnée pour appel API\n\n",
+        "height": 280,
+        "width": 220,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        20
+      ],
+      "id": "0bfdbe70-dac0-45d9-ab64-14c2d735aaef",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## Workflow de récupération de CV \n+ vérification et évaluation de la qualité du fichier\n+ extraction de la donnée en fonction du mimetype et de la note du fichier\n+ structuration de la donnée extraite\n+ \n",
+        "height": 1560,
+        "width": 6060,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -5800,
+        -1100
+      ],
+      "id": "c9fc2deb-2eb0-4444-9bca-3b8b619bfdc1",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "Tu dois, à partir du JSON brut, ajouter les informations nécessaires dans la catégorie jobHistory. Pour ce faire, tu dois analyser les expériences présentes dans workExperienceEntries uniquement.\n\nRenvoie le tableau JSON brut, sans aucune modification ailleurs que dans jobHistory. Ne change ni l’ordre, ni le format des autres données.\nNe rajoute pas de balise comme json autour.\n\n📦 CONSTRUCTION DE jobHistory (obligatoire) :\n\nGénère dynamiquement l’objet jobHistory à partir de toutes les workExperienceEntries, en respectant les consignes suivantes :\n\n🎯 Champs à générer :\ntotal_experience : durée totale nette (en mois, entier), en excluant les chevauchements.\n\nlongest_position_company : nom de l'entreprise avec la période la plus longue.\n\nlongest_position_title : poste correspondant à cette période.\n\nlongest_position_duration : durée en mois (entier) de cette période.\n\ntime_gaps : liste de trous entre deux expériences consécutives (chaque trou = objet JSON avec start, end, duration_months).\n\ntime_overlaps : liste de chevauchements entre deux expériences (chaque chevauchement = objet JSON avec range_a, range_b, overlap_months).\n\n🕒 Règles de traitement des dates :\nUtilise start_date et end_date pour chaque expérience.\n\nTrie d’abord les expériences par date de début croissante.\n\nUne période de chevauchement existe si deux expériences se superposent dans le temps.\n\nUn gap existe si une expérience débute après la fin de la précédente (après tri).\n\n➕ Important :\nIgnore les dates nulles ou invalides\n\nArrondis les durées en mois vers le bas si partiels (ex : 2021-01-15 à 2021-03-14 = 1 mois)\n\nNe crée aucun doublon de gap ou overlap\n\nNe génère pas de gap entre deux expériences si elles se chevauchent\n\n📦 FORMAT JSON ATTENDU :\n\n\"jobHistory\": {\n  \"total_experience\": number,\n  \"longest_position_company\": \"string\",\n  \"longest_position_title\": \"string\",\n  \"longest_position_duration\": number,\n  \"created_at\": \"ISODate\",\n  \"updated_at\": \"ISODate\",\n  \"time_gaps\": [\n    {\n      \"start\": \"YYYY-MM-DD\",\n      \"end\": \"YYYY-MM-DD\",\n      \"duration_months\": number\n    },\n    ...\n  ],\n  \"time_overlaps\": [\n    {\n      \"range_a\": [\"YYYY-MM-DD\", \"YYYY-MM-DD\"],\n      \"range_b\": [\"YYYY-MM-DD\", \"YYYY-MM-DD\"],\n      \"overlap_months\": number\n    },\n    ...\n  ]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -2620,
+        -440
+      ],
+      "id": "4d52f233-142a-47b4-9709-73fd9f394ff9",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2620,
+        -260
+      ],
+      "id": "7b85d980-6860-4886-a597-4b3e5b518a68",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "3M4PHChdmtsA904Z",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0af6eed1-c0df-4eed-aa3c-40c1d991641f",
+              "name": "id",
+              "value": "={{ $('Webhook Trigger').item.json.body.analysisId }}",
+              "type": "string"
+            },
+            {
+              "id": "4a55d39f-a668-4986-8725-d747a41f636c",
+              "name": "cv_document_id",
+              "value": "={{ $('Webhook Trigger').item.json.body.documentId }}",
+              "type": "string"
+            },
+            {
+              "id": "bd77a383-7aba-4b76-92f2-22ab8c5c5f5f",
+              "name": "advisor_id",
+              "value": "={{ $('Webhook Trigger').item.json.body.userId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2020,
+        -440
+      ],
+      "id": "1185d379-8ff8-442b-937a-77c1327bc687",
+      "name": "Recup ID"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Recuperation Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperation Supabase": {
+      "main": [
+        [
+          {
+            "node": "informations du fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "informations du fichier": {
+      "main": [
+        [
+          {
+            "node": "intégrité du fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "intégrité du fichier": {
+      "main": [
+        [
+          {
+            "node": "Texte accessible",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DOC",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "JPG",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "JPG",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PNG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DOC": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JPG": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PNG": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texte accessible": {
+      "main": [
+        [
+          {
+            "node": "Evaluation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parsing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parsing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Errors Parsing": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Missing Parsing": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Missing Parsing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Errors Parsing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsing": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook Errors Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsing1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Recup ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recup ID": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "8GUEZAnQX5HR4Ict"
+  },
+  "versionId": "a25394cd-2587-43f6-998e-b1c6c2629f9a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "0fJmPApvJ9PmqZ83",
+  "tags": []
+}
