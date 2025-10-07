@@ -1,0 +1,3511 @@
+{
+  "name": "SAVE-DATABASE",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -260,
+        520
+      ],
+      "id": "50347d25-3753-4832-ab73-460c4c536fe3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "content": "## Personnal Informations\n",
+        "height": 800,
+        "width": 1040,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1360,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "ff41e227-1a92-4bd4-ab70-b79186d9a849",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14668a75-48de-4c6e-8fbb-bdf939cd3ed0",
+              "leftValue": "={{ $('Parsing').item.json.personalInfo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        520
+      ],
+      "id": "11a7c43b-3586-452b-b88d-3d0d4593ca03",
+      "name": "personalInfo Not Empty",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14668a75-48de-4c6e-8fbb-bdf939cd3ed0",
+              "leftValue": "={{ $('Parsing').item.json.educationEntries}}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2620,
+        520
+      ],
+      "id": "4f752010-88b7-442e-9ac8-a3d5f61510d6",
+      "name": "educationEntries Not Empty",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "## Education entries\n",
+        "height": 800,
+        "width": 1220,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2500,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "e0b2b3e8-cc93-4922-9e1e-8e0a9446c536",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14668a75-48de-4c6e-8fbb-bdf939cd3ed0",
+              "leftValue": "={{ $('Parsing').item.json.workExperienceEntries}}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4000,
+        520
+      ],
+      "id": "dc1c292a-0e71-4551-a3d0-fa9311629f1d",
+      "name": "workExperienceEntries Not Empty",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "## Work experiences\n\n",
+        "height": 800,
+        "width": 1140,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3900,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "0706f550-7499-457b-9ed8-f765b275dba2",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14668a75-48de-4c6e-8fbb-bdf939cd3ed0",
+              "leftValue": "={{ $('Parsing').item.json.skills }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5300,
+        520
+      ],
+      "id": "4f01a689-1344-4cc2-b1a7-e6cb8dcfb70e",
+      "name": "skills Not Empty",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "## Skills\n\n",
+        "height": 800,
+        "width": 1080,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5240,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "6eb04172-5daa-4a61-82b7-c1631ecebb79",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14668a75-48de-4c6e-8fbb-bdf939cd3ed0",
+              "leftValue": "={{ $('Parsing').item.json.languages }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        6620,
+        520
+      ],
+      "id": "b8abd16f-2a83-453d-a354-087b3db6428a",
+      "name": "languages Not Empty",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "## Languages\n\n",
+        "height": 800,
+        "width": 1100,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6580,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "4927525f-4537-4ae2-b55c-6ef69d55fbbc",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14668a75-48de-4c6e-8fbb-bdf939cd3ed0",
+              "leftValue": "={{ $('Parsing').item.json.certifications }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        8060,
+        520
+      ],
+      "id": "e0ccea6e-a724-4c03-b921-f36958392cab",
+      "name": "certifications Not Empty",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "## Certifications\n\n",
+        "height": 800,
+        "width": 1080,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8060,
+        220
+      ],
+      "typeVersion": 1,
+      "id": "c1d83b2b-ea1e-450d-bb24-9945b329ac0c",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## Cv Analyses",
+        "height": 800,
+        "width": 700
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        340,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "8f1e9563-33ac-41fc-86bc-78cded6bcd78",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['start_date', 'end_date'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.educationEntries;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        380
+      ],
+      "id": "c794b99d-71a2-463f-8723-77bae7819943",
+      "name": "Mapping Education Entries"
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['start_date', 'end_date'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.educationEntries;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        640
+      ],
+      "id": "b35a1aa5-40cc-453e-a7f2-52879a6fab65",
+      "name": "Mapping Education Entries1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['start_date', 'end_date'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.workExperienceEntries;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4620,
+        380
+      ],
+      "id": "1253d43b-a359-484c-b72f-f7a3e2714f66",
+      "name": "Mapping Work Experience"
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['start_date', 'end_date'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.workExperienceEntries;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4620,
+        660
+      ],
+      "id": "ca3d0a0a-e3db-4384-b0da-36a45d79990a",
+      "name": "Mapping Work Experience1"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "cv_analyses",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id.trim() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        540,
+        500
+      ],
+      "id": "d674d6a0-decf-47d8-9648-7dcc40a6cfd5",
+      "name": "Get CV analyses",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "personal_info",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        400
+      ],
+      "id": "6b504a0c-b312-465b-86e0-6fa6ee30d61a",
+      "name": "Get Personal info",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "education_entries",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        380
+      ],
+      "id": "db76c65c-41a8-4efa-86ec-879c2443f6a4",
+      "name": "Get Education entries",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "work_experience_entries",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4200,
+        420
+      ],
+      "id": "374026cc-1dea-4ec4-bd8e-5fdc8c4b71c1",
+      "name": "Get Work experience entries",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "cv_analyses",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_document_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.advisor_id }}"
+            },
+            {
+              "fieldId": "cv_document_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.cv_document_id }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "error"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        800,
+        500
+      ],
+      "id": "411f2b4d-1b03-45be-a493-7461542cf758",
+      "name": "Cv Analyses update",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "personal_info",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.email }}"
+            },
+            {
+              "fieldId": "phone",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.phone }}"
+            },
+            {
+              "fieldId": "address",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.address }}"
+            },
+            {
+              "fieldId": "linkedin",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.linkedin }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{$now}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        620
+      ],
+      "id": "67211efe-99d3-41c9-9756-012ca5108fdb",
+      "name": "Personnal Info create",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c71af360-2513-4bb7-8612-f01d2b606ca3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        520
+      ],
+      "id": "4ef02cda-756f-43ab-88da-08c93d5f698f",
+      "name": "Exist In Table ?1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c71af360-2513-4bb7-8612-f01d2b606ca3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3080,
+        520
+      ],
+      "id": "ab0a6c2b-bc86-43ff-9c39-1d4b21b6e28e",
+      "name": "Exist In Table ?2",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "education_entries",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            },
+            {
+              "fieldId": "institution",
+              "fieldValue": "={{ $('Mapping Education Entries').item.json.institution }}"
+            },
+            {
+              "fieldId": "degree",
+              "fieldValue": "={{ $('Mapping Education Entries').item.json.degree }}"
+            },
+            {
+              "fieldId": "field",
+              "fieldValue": "={{ $('Mapping Education Entries').item.json.field }}"
+            },
+            {
+              "fieldId": "start_date",
+              "fieldValue": "={{ $('Mapping Education Entries').item.json.start_date }}"
+            },
+            {
+              "fieldId": "end_date",
+              "fieldValue": "={{ $('Mapping Education Entries').item.json.end_date }}"
+            },
+            {
+              "fieldId": "ongoing",
+              "fieldValue": "={{ $('Mapping Education Entries').item.json.ongoing }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Mapping Education Entries').item.json.description }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3540,
+        380
+      ],
+      "id": "933cd152-7118-441b-8ca8-76edffcb9647",
+      "name": "Education Entries",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "education_entries",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id}}"
+            },
+            {
+              "fieldId": "institution",
+              "fieldValue": "={{ $('Mapping Education Entries1').item.json.institution }}"
+            },
+            {
+              "fieldId": "degree",
+              "fieldValue": "={{ $('Mapping Education Entries1').item.json.degree }}"
+            },
+            {
+              "fieldId": "field",
+              "fieldValue": "={{ $('Mapping Education Entries1').item.json.field }}"
+            },
+            {
+              "fieldId": "start_date",
+              "fieldValue": "={{ $('Mapping Education Entries1').item.json.start_date }}"
+            },
+            {
+              "fieldId": "end_date",
+              "fieldValue": "={{ $('Mapping Education Entries1').item.json.end_date }}"
+            },
+            {
+              "fieldId": "ongoing",
+              "fieldValue": "={{ $('Mapping Education Entries1').item.json.ongoing }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Mapping Education Entries1').item.json.description }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3560,
+        640
+      ],
+      "id": "3d7969b7-cf77-4428-b8c9-b77003d6b51d",
+      "name": "Education Entries1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c71af360-2513-4bb7-8612-f01d2b606ca3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4380,
+        540
+      ],
+      "id": "242419b2-f20c-4dad-a90b-ea19b0a70abb",
+      "name": "Exist In Table ?3",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "work_experience_entries",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "ongoing",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.ongoing }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.description }}"
+            },
+            {
+              "fieldId": "start_date",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.start_date }}"
+            },
+            {
+              "fieldId": "end_date",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.end_date }}"
+            },
+            {
+              "fieldId": "company",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.company }}"
+            },
+            {
+              "fieldId": "position",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.position }}"
+            },
+            {
+              "fieldId": "location",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.location }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Mapping Work Experience').item.json.description }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4840,
+        380
+      ],
+      "id": "cf960369-c71a-4cde-b5e4-9dad76638ce5",
+      "name": "Work experience entries update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "work_experience_entries",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "ongoing",
+              "fieldValue": "={{ $('Mapping Work Experience1').item.json.ongoing }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Mapping Work Experience1').item.json.description }}"
+            },
+            {
+              "fieldId": "start_date",
+              "fieldValue": "={{ $('Mapping Work Experience1').item.json.start_date }}"
+            },
+            {
+              "fieldId": "end_date",
+              "fieldValue": "={{ \n  $('Mapping Work Experience1').item.json.ongoing === true || $('Mapping Work Experience1').item.json.ongoing === 'true' \n    ? undefined \n    : $('Mapping Work Experience1').item.json.end_date \n}}\n"
+            },
+            {
+              "fieldId": "company",
+              "fieldValue": "={{ $('Mapping Work Experience1').item.json.company }}"
+            },
+            {
+              "fieldId": "position",
+              "fieldValue": "={{ $('Mapping Work Experience1').item.json.position }}"
+            },
+            {
+              "fieldId": "location",
+              "fieldValue": "={{ $('Mapping Work Experience1').item.json.location }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Mapping Work Experience1').item.json.description }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4840,
+        660
+      ],
+      "id": "45f304dc-067c-4512-b09c-3da4453d0642",
+      "name": "Work experience entries create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "skills",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5540,
+        380
+      ],
+      "id": "ee8c47fe-6459-4bfa-95b9-74be4a172fa8",
+      "name": "Get Skills",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c71af360-2513-4bb7-8612-f01d2b606ca3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5740,
+        540
+      ],
+      "id": "54c46d32-0f58-4f8c-ab3a-aed0f24e0c4c",
+      "name": "Exist In Table ?4",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['last_used'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.skills;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5960,
+        380
+      ],
+      "id": "f5f59f98-ded5-47ea-ab14-fabd61ede8aa",
+      "name": "Mapping Skills"
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['last_used'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.skills;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5960,
+        660
+      ],
+      "id": "df2f4fa7-ea40-4959-823d-c2e388233d89",
+      "name": "Mapping Skills1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "skills",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Mapping Skills').item.json.name }}"
+            },
+            {
+              "fieldId": "category",
+              "fieldValue": "={{ $('Mapping Skills').item.json.category }}"
+            },
+            {
+              "fieldId": "source",
+              "fieldValue": "={{ $('Mapping Skills').item.json.source }}"
+            },
+            {
+              "fieldId": "confidence",
+              "fieldValue": "={{ $('Mapping Skills').item.json.confidence }}"
+            },
+            {
+              "fieldId": "experience_duration",
+              "fieldValue": "={{ $('Mapping Skills').item.json.experience_duration }}"
+            },
+            {
+              "fieldId": "last_used",
+              "fieldValue": "={{ $('Mapping Skills').item.json.last_used }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        6140,
+        380
+      ],
+      "id": "1107987b-0e63-4d4c-8f7d-63b6a35b71a4",
+      "name": "Skills update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "skills",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Mapping Skills1').item.json.name }}"
+            },
+            {
+              "fieldId": "category",
+              "fieldValue": "={{ $('Mapping Skills1').item.json.category }}"
+            },
+            {
+              "fieldId": "source",
+              "fieldValue": "={{ $('Mapping Skills1').item.json.source }}"
+            },
+            {
+              "fieldId": "confidence",
+              "fieldValue": "={{ $('Mapping Skills1').item.json.confidence }}"
+            },
+            {
+              "fieldId": "experience_duration",
+              "fieldValue": "={{ $('Mapping Skills1').item.json.experience_duration }}"
+            },
+            {
+              "fieldId": "last_used",
+              "fieldValue": "={{ $('Mapping Skills1').item.json.last_used }}"
+            },
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        6140,
+        660
+      ],
+      "id": "c9061392-b3c5-4b65-9967-63465f6da2d2",
+      "name": "Skills Create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "language_entries",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        6820,
+        400
+      ],
+      "id": "d1e1385d-035e-420e-9f03-795aa66842f1",
+      "name": "Get Language",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c71af360-2513-4bb7-8612-f01d2b606ca3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        7040,
+        540
+      ],
+      "id": "5a369933-a0e9-4753-8ccc-9c4e9726a44e",
+      "name": "Exist In Table ?5",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const entries = $('Parsing').first().json.languages\n;\n\nreturn entries.map(entry => ({\n  json: entry\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7240,
+        380
+      ],
+      "id": "f2e98570-25e4-4984-91b5-0ca040867fe1",
+      "name": "Mapping Languages"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "language_entries",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "language",
+              "fieldValue": "={{ $('Mapping Languages').item.json.language }}"
+            },
+            {
+              "fieldId": "proficiency",
+              "fieldValue": "={{ $('Mapping Languages').item.json.proficiency }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        7480,
+        380
+      ],
+      "id": "cb83c948-ce10-421a-9129-fd82cefacab8",
+      "name": "Languages update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const entries = $('Parsing').first().json.languages\n;\n\nreturn entries.map(entry => ({\n  json: entry\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7240,
+        660
+      ],
+      "id": "3e785da4-9e21-491d-8462-3837afec27d0",
+      "name": "Mapping Languages1"
+    },
+    {
+      "parameters": {
+        "tableId": "language_entries",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "language",
+              "fieldValue": "={{ $('Mapping Languages1').item.json.language }}"
+            },
+            {
+              "fieldId": "proficiency",
+              "fieldValue": "={{ $('Mapping Languages1').item.json.proficiency }}"
+            },
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        7480,
+        660
+      ],
+      "id": "1064658e-f449-4074-9926-8c9fc5163d5c",
+      "name": "Languages Create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c71af360-2513-4bb7-8612-f01d2b606ca3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        8420,
+        540
+      ],
+      "id": "71b7771b-006e-449a-99cd-7c52d39e8f07",
+      "name": "Exist In Table ?6",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "certifications",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        8220,
+        400
+      ],
+      "id": "dd5eefd8-e7d7-40f6-a4ce-686fc40199f3",
+      "name": "Get Certifications",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['date', 'expiry_date'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.certifications;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8620,
+        380
+      ],
+      "id": "aa2f5cc8-ce6b-4115-8cea-1801fdcd5e3d",
+      "name": "Mapping Certifications"
+    },
+    {
+      "parameters": {
+        "jsCode": "function sanitizeDateFields(entry) {\n  const dateFields = ['date', 'expiry_date'];\n  \n  for (const key of dateFields) {\n    if (entry[key] === \"UNKNOWN\" || entry[key] === \"null\") {\n      entry[key] = null;\n    }\n  }\n\n  return entry;\n}\n\nconst entries = $('Parsing').first().json.certifications;\n\nconst cleaned = entries.map(sanitizeDateFields);\n\nreturn cleaned.map(entry => ({\n  json: entry\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8620,
+        660
+      ],
+      "id": "0f857ee6-1c85-4776-8ac1-d3250209bec6",
+      "name": "Mapping Certifications1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "certification_entries",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Mapping Certifications').item.json.name }}"
+            },
+            {
+              "fieldId": "issuer",
+              "fieldValue": "={{ $('Mapping Certifications').item.json.issuer }}"
+            },
+            {
+              "fieldId": "date",
+              "fieldValue": "={{ $('Mapping Certifications').item.json.date }}"
+            },
+            {
+              "fieldId": "expiry_date",
+              "fieldValue": "={{ $('Mapping Certifications').item.json.expiry_date }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        8840,
+        380
+      ],
+      "id": "f47d527b-6dde-4243-8058-0c5775caa7cb",
+      "name": "Certifications Update",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawJson = $input.first().json.output; // adapte selon où est le JSON\nreturn [{\n  json: JSON.parse(rawJson)\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        520
+      ],
+      "id": "b386a68e-f724-438c-af7a-568726c39222",
+      "name": "Parsing"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur Missing Element\n",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        1020
+      ],
+      "id": "c21c71aa-15da-4d64-a041-248b3c64fd5f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"error\": true,\n  \"block\": \"personalInfo\",\n  \"message\": \"Missing personal information\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        1120
+      ],
+      "id": "1f172df8-0391-462d-8880-7b860ecda183",
+      "name": "Personal Info Missing"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur",
+        "height": 240,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        1040
+      ],
+      "id": "4904a05a-1ffa-41e1-9d41-b3a819be0b14",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"error\": true,\n  \"block\": \"personalInfo\",\n  \"message\": \"Missing Education Entries\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3320,
+        1120
+      ],
+      "id": "0e9ed2c9-25b6-4df2-b7c3-6e5119d0048a",
+      "name": "Education Entries Missing"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur",
+        "height": 240,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4300,
+        1040
+      ],
+      "id": "dcda95f9-4fb4-47ed-8a03-5000be27dc38",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"error\": true,\n  \"block\": \"Work Experiences\",\n  \"message\": \"Missing Work Experiences\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4580,
+        1120
+      ],
+      "id": "d0e99ec6-143d-4856-b9e8-d8f952745023",
+      "name": "Work Experiences Missing"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur",
+        "height": 240,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5600,
+        1040
+      ],
+      "id": "79a3c164-3cb9-4603-ad17-1a35826fe1c1",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"error\": true,\n  \"block\": \"Skills\",\n  \"message\": \"Missing Skills\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5920,
+        1120
+      ],
+      "id": "665f092a-89af-4b63-a102-5f94b04ee59d",
+      "name": "Skills Missing"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur",
+        "height": 240,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        6920,
+        1040
+      ],
+      "id": "e654caa3-3fe5-420d-901e-dd2147f1d0cc",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"error\": true,\n  \"block\": \"Languages\",\n  \"message\": \"Missing Languages\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7200,
+        1120
+      ],
+      "id": "1fba1b99-33c1-40fe-8ac8-772c80abfd2a",
+      "name": "Languages Missing"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur",
+        "height": 240,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        8300,
+        1040
+      ],
+      "id": "48d6ba47-3bd3-49c6-964a-ccaf89354d5e",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"error\": true,\n  \"block\": \"Certifications\",\n  \"message\": \"Missing Certifications\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        8600,
+        1120
+      ],
+      "id": "9924726a-6654-4b95-996e-873c9ce98cc7",
+      "name": "Certifications Missing",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -320,
+        1380
+      ],
+      "id": "1828a846-338b-4db8-9e4c-69141def6d7a",
+      "name": "Missing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aa9111b6-c355-4f80-8c46-7a2cc63f20b1",
+              "name": "Missings",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        1460
+      ],
+      "id": "f9c2d92d-e24b-412b-a879-bc779c450419",
+      "name": "Missings Elements"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "personal_info",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.email }}"
+            },
+            {
+              "fieldId": "phone",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.phone }}"
+            },
+            {
+              "fieldId": "address",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.address }}"
+            },
+            {
+              "fieldId": "linkedin",
+              "fieldValue": "={{ $('Parsing').item.json.personalInfo.linkedin }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{$now}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        400
+      ],
+      "id": "215906fa-bd56-4ae5-8fbc-0ae33d507568",
+      "name": "Personnal Info update",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5a85709-4996-432b-a9f2-7be4eeba35c4",
+              "name": "errors",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "6617221d-3db8-4ca0-a7aa-e62d835bc8f1",
+              "name": "block",
+              "value": "Personal Info",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2220,
+        -20
+      ],
+      "id": "1119501d-4677-4e4d-a0ce-d4a5f19fd4dc",
+      "name": "Error Personal Info",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -320,
+        -220
+      ],
+      "id": "e6ea2c2a-13b9-4758-8465-440abb1aca60",
+      "name": "Errors"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aa9111b6-c355-4f80-8c46-7a2cc63f20b1",
+              "name": "Errors",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        -140
+      ],
+      "id": "6902afeb-53e3-4eec-8acf-ea1b9b5abb45",
+      "name": "Table Errors"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5a85709-4996-432b-a9f2-7be4eeba35c4",
+              "name": "errors",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "7385b740-da1e-4036-adb7-7b896cb3a9f1",
+              "name": "block",
+              "value": "Educational Entries",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3540,
+        -20
+      ],
+      "id": "9531ccbd-9059-40ef-921d-0a15cfcbd6c0",
+      "name": "Error Educational Entries",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5a85709-4996-432b-a9f2-7be4eeba35c4",
+              "name": "errors",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "f984afb4-81d3-4791-8e2b-a026c3ee0b27",
+              "name": "block",
+              "value": "Work Experiences",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4860,
+        -20
+      ],
+      "id": "d808b3c0-f2f6-4b8a-8049-aafba4f8fcc2",
+      "name": "Error Work Experiences",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5a85709-4996-432b-a9f2-7be4eeba35c4",
+              "name": "errors",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "cbe63141-c6cb-4186-81a2-437097ea9f7b",
+              "name": "block",
+              "value": "Skills",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6160,
+        -20
+      ],
+      "id": "78a4b505-d0a7-4c72-9a94-3fab370db48c",
+      "name": "Error Skills",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5a85709-4996-432b-a9f2-7be4eeba35c4",
+              "name": "errors",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "cd71931f-0823-424f-b876-9185ce19d754",
+              "name": "block",
+              "value": "Languages",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7480,
+        -20
+      ],
+      "id": "351f7f93-4383-4b0b-b8e9-b855e144346e",
+      "name": "Error Languages",
+      "alwaysOutputData": false,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5a85709-4996-432b-a9f2-7be4eeba35c4",
+              "name": "errors",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "071b7401-6bcc-40ba-8155-fbd3c72aee22",
+              "name": "block",
+              "value": "Certifications",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        8840,
+        -20
+      ],
+      "id": "03ccca45-1ca3-4e1f-aca9-b14688e5a7c5",
+      "name": "Error Certifications",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14668a75-48de-4c6e-8fbb-bdf939cd3ed0",
+              "leftValue": "={{ $('Parsing').item.json.jobHistory }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        9320,
+        520
+      ],
+      "id": "ee19d758-bcb4-4527-b146-51ab2d90e9c9",
+      "name": "JobHistory Not Empty",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c71af360-2513-4bb7-8612-f01d2b606ca3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        9780,
+        520
+      ],
+      "id": "04a72c39-45da-4c26-a791-36a2ffb52dbb",
+      "name": "Exist In Table ?"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "job_history_analyses",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        9560,
+        400
+      ],
+      "id": "56d08965-6508-42aa-999c-f3f4466cb3ce",
+      "name": "Get jobHistory",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "job_history_analyses",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cv_analysis_id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            },
+            {
+              "fieldId": "total_experience",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.total_experience }}"
+            },
+            {
+              "fieldId": "longest_position_company",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.longest_position_company }}"
+            },
+            {
+              "fieldId": "longest_position_title",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.longest_position_title }}"
+            },
+            {
+              "fieldId": "longest_position_duration",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.longest_position_duration }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{$now}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        10040,
+        400
+      ],
+      "id": "ddb8389e-c1fa-4a26-a7c2-68eb80fd06d5",
+      "name": "jobHistory update",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "job_history_analyses",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            },
+            {
+              "fieldId": "total_experience",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.total_experience }}"
+            },
+            {
+              "fieldId": "longest_position_company",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.longest_position_company }}"
+            },
+            {
+              "fieldId": "longest_position_title",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.longest_position_title }}"
+            },
+            {
+              "fieldId": "longest_position_duration",
+              "fieldValue": "={{ $('Parsing').item.json.jobHistory.longest_position_duration }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{$now}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        10040,
+        680
+      ],
+      "id": "6f270ff6-a231-4ee0-80d1-ee5b3f6c3689",
+      "name": "jobHistory Create",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "certifications",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Mapping Certifications1').item.json.name }}"
+            },
+            {
+              "fieldId": "issuer",
+              "fieldValue": "={{ $('Mapping Certifications1').item.json.issuer }}"
+            },
+            {
+              "fieldId": "date",
+              "fieldValue": "={{ $('Mapping Certifications1').item.json.date }}"
+            },
+            {
+              "fieldId": "expiry_date",
+              "fieldValue": "={{ $('Mapping Certifications1').item.json.expiry_date }}"
+            },
+            {
+              "fieldId": "cv_analysis_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        8840,
+        660
+      ],
+      "id": "94882810-0957-40ee-87c1-35a2f81ebe36",
+      "name": "Certifications Create",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f5IzIF3VHisITQJk",
+          "name": "Supabase sms"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"error\": true,\n  \"block\": \"jobHistory\",\n  \"message\": \"Missing job History\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        9860,
+        1120
+      ],
+      "id": "84721cdf-437f-406f-b1ed-d41b266780cd",
+      "name": "jobHistory Missing",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5a85709-4996-432b-a9f2-7be4eeba35c4",
+              "name": "errors",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "d30919e9-2f6a-425a-aa4c-00c20b6eac02",
+              "name": "block",
+              "value": "Job History",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        10020,
+        -20
+      ],
+      "id": "49eb98d1-baa2-460f-b68c-0be6f3dee522",
+      "name": "Error jobHistory",
+      "executeOnce": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        380,
+        1440
+      ],
+      "id": "072bc8d7-a813-41d1-89b7-5141e61b71d1",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur Table",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        -80
+      ],
+      "id": "23dcc0fd-8401-4598-9464-caf1920ef7fe",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur Table",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        -120
+      ],
+      "id": "cefce103-00f4-45c1-85f7-03328285b6cb",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur Table",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4640,
+        -120
+      ],
+      "id": "f5b476e4-4ee6-4ec4-8944-c7101886c505",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur Table",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5920,
+        -120
+      ],
+      "id": "d54191d2-0285-41b2-8614-87b23c6f3ebf",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur Tables",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        7180,
+        -120
+      ],
+      "id": "ddf4c4f0-40a1-4ad3-8852-72b07221047b",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "## Gestion Erreur Table",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        8580,
+        -120
+      ],
+      "id": "117a30b1-af9a-4c7f-b2f7-2a7f149ab105",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "## JobHistory\n\n",
+        "height": 800,
+        "width": 1080,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9240,
+        260
+      ],
+      "typeVersion": 1,
+      "id": "e189b784-fbc1-4a38-9028-979e20bd9fcb",
+      "name": "Sticky Note13"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Parsing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "personalInfo Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Get Personal info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Personal Info Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "educationEntries Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Get Education entries",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Education Entries Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "workExperienceEntries Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Get Work experience entries",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Work Experiences Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "skills Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Get Skills",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skills Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "languages Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Get Language",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Languages Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "certifications Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Get Certifications",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Certifications Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Education Entries": {
+      "main": [
+        [
+          {
+            "node": "Education Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Education Entries1": {
+      "main": [
+        [
+          {
+            "node": "Education Entries1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Work Experience": {
+      "main": [
+        [
+          {
+            "node": "Work experience entries update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Work Experience1": {
+      "main": [
+        [
+          {
+            "node": "Work experience entries create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get CV analyses": {
+      "main": [
+        [
+          {
+            "node": "Cv Analyses update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Personal info": {
+      "main": [
+        [
+          {
+            "node": "Exist In Table ?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Education entries": {
+      "main": [
+        [
+          {
+            "node": "Exist In Table ?2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Work experience entries": {
+      "main": [
+        [
+          {
+            "node": "Exist In Table ?3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cv Analyses update": {
+      "main": [
+        [
+          {
+            "node": "personalInfo Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personnal Info create": {
+      "main": [
+        [
+          {
+            "node": "educationEntries Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Personal Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist In Table ?1": {
+      "main": [
+        [
+          {
+            "node": "Personnal Info update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Personnal Info create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist In Table ?2": {
+      "main": [
+        [
+          {
+            "node": "Mapping Education Entries",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mapping Education Entries1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Education Entries": {
+      "main": [
+        [
+          {
+            "node": "workExperienceEntries Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Educational Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Education Entries1": {
+      "main": [
+        [
+          {
+            "node": "workExperienceEntries Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Educational Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist In Table ?3": {
+      "main": [
+        [
+          {
+            "node": "Mapping Work Experience",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mapping Work Experience1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Work experience entries update": {
+      "main": [
+        [
+          {
+            "node": "skills Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Work Experiences",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Work experience entries create": {
+      "main": [
+        [
+          {
+            "node": "skills Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Work Experiences",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Skills": {
+      "main": [
+        [
+          {
+            "node": "Exist In Table ?4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist In Table ?4": {
+      "main": [
+        [
+          {
+            "node": "Mapping Skills",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mapping Skills1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Skills": {
+      "main": [
+        [
+          {
+            "node": "Skills update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Skills1": {
+      "main": [
+        [
+          {
+            "node": "Skills Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skills update": {
+      "main": [
+        [
+          {
+            "node": "languages Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Skills",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skills Create": {
+      "main": [
+        [
+          {
+            "node": "languages Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Skills",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Language": {
+      "main": [
+        [
+          {
+            "node": "Exist In Table ?5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist In Table ?5": {
+      "main": [
+        [
+          {
+            "node": "Mapping Languages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mapping Languages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Languages": {
+      "main": [
+        [
+          {
+            "node": "Languages update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Languages update": {
+      "main": [
+        [
+          {
+            "node": "certifications Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Languages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Languages1": {
+      "main": [
+        [
+          {
+            "node": "Languages Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Languages Create": {
+      "main": [
+        [
+          {
+            "node": "certifications Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Languages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist In Table ?6": {
+      "main": [
+        [
+          {
+            "node": "Mapping Certifications",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mapping Certifications1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Certifications": {
+      "main": [
+        [
+          {
+            "node": "Exist In Table ?6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Certifications": {
+      "main": [
+        [
+          {
+            "node": "Certifications Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapping Certifications1": {
+      "main": [
+        [
+          {
+            "node": "Certifications Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Certifications Update": {
+      "main": [
+        [
+          {
+            "node": "JobHistory Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Certifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsing": {
+      "main": [
+        [
+          {
+            "node": "Get CV analyses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personal Info Missing": {
+      "main": [
+        [
+          {
+            "node": "Missing",
+            "type": "main",
+            "index": 5
+          },
+          {
+            "node": "educationEntries Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Education Entries Missing": {
+      "main": [
+        [
+          {
+            "node": "Missing",
+            "type": "main",
+            "index": 4
+          },
+          {
+            "node": "workExperienceEntries Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Work Experiences Missing": {
+      "main": [
+        [
+          {
+            "node": "Missing",
+            "type": "main",
+            "index": 3
+          },
+          {
+            "node": "skills Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skills Missing": {
+      "main": [
+        [
+          {
+            "node": "Missing",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "languages Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Languages Missing": {
+      "main": [
+        [
+          {
+            "node": "Missing",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "certifications Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Certifications Missing": {
+      "main": [
+        [
+          {
+            "node": "Missing",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "JobHistory Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Missing": {
+      "main": [
+        [
+          {
+            "node": "Missings Elements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Missings Elements": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Personnal Info update": {
+      "main": [
+        [
+          {
+            "node": "educationEntries Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Personal Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Personal Info": {
+      "main": [
+        [
+          {
+            "node": "educationEntries Not Empty",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Errors",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Errors": {
+      "main": [
+        [
+          {
+            "node": "Table Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Table Errors": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Educational Entries": {
+      "main": [
+        [
+          {
+            "node": "workExperienceEntries Not Empty",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Errors",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Error Work Experiences": {
+      "main": [
+        [
+          {
+            "node": "skills Not Empty",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Errors",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Error Skills": {
+      "main": [
+        [
+          {
+            "node": "languages Not Empty",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Errors",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Error Languages": {
+      "main": [
+        [
+          {
+            "node": "certifications Not Empty",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Errors",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Error Certifications": {
+      "main": [
+        [
+          {
+            "node": "Errors",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "JobHistory Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JobHistory Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Get jobHistory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "jobHistory Missing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exist In Table ?": {
+      "main": [
+        [
+          {
+            "node": "jobHistory update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "jobHistory Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get jobHistory": {
+      "main": [
+        [
+          {
+            "node": "Exist In Table ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "jobHistory update": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error jobHistory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "jobHistory Create": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error jobHistory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Certifications Create": {
+      "main": [
+        [
+          {
+            "node": "JobHistory Not Empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Certifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "jobHistory Missing": {
+      "main": [
+        [
+          {
+            "node": "Missing",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Error jobHistory": {
+      "main": [
+        [
+          {
+            "node": "Errors",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6b104554-d06d-4168-bd47-d392aca9849c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "782dc3894978243c9249feb320237edba54104afeb26422ad7d68468d824fd16"
+  },
+  "id": "XdXTyyFwZzn6icsl",
+  "tags": []
+}
