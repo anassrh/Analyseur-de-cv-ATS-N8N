@@ -1,0 +1,597 @@
+{
+  "name": "PDF",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        260
+      ],
+      "id": "eb444822-f7da-4c82-86a1-9df13e9e6e75",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.document.text }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "9ec23acb-7dcd-4792-85f0-fc9604b2f89f",
+      "name": "Check OCR Result",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        300
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        940,
+        300
+      ],
+      "id": "216a24b0-c025-4f1a-8044-04100bfbfb74",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://vision.googleapis.com/v1/files:annotate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [{\n    \"inputConfig\": {\n      \"mimeType\": \"application/pdf\",\n      \"content\": \"{{ $json.data }}\"\n    },\n    \"features\": [{ \"type\": \"DOCUMENT_TEXT_DETECTION\" }],\n    \"pages\": [1,2,3,4,5]\n  }]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        300
+      ],
+      "id": "9a04329f-e712-4679-a6c1-068fe7875949",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleApi": {
+          "id": "t1ildCohVpEI4zFc",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -20
+      ],
+      "id": "2781b77e-de89-4a4a-806c-db3c5859e905",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.document.text }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "2ab1c9d1-5e98-4fe7-b3a5-cd6d5437ce7f",
+      "name": "Check OCR Result1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        -40
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "error_message",
+              "value": "=Le Cv n'a pas pu être analysé"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5072fed3-0b86-4575-8d4b-e23090ddef2b",
+      "name": "Prepare Error Log (PDF)1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        520
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "content": "## Recup PDF scannés Via Google Document AI\n\n",
+        "height": 460,
+        "width": 1780
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        380,
+        -300
+      ],
+      "typeVersion": 1,
+      "id": "45472db4-7bd0-444d-aee1-e1140c78fd64",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Backup Via Google Vison Cloud\n\n",
+        "height": 300,
+        "width": 780
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "d7e37009-d6f8-4851-bf30-1f6ff7671eaa",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "c459cc18-6cea-4f69-85e8-0d9818e452be",
+      "name": "Extract PDF Text1",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -220
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "611da49e-092a-48c3-89c2-1ca4e4e6fae8",
+              "leftValue": "={{ $json.document.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        -20
+      ],
+      "id": "923e49ff-5b17-4550-aa9a-979bb0d1511b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "## Gestions des erreurs\n\n \n",
+        "height": 280,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        440
+      ],
+      "id": "a2d0e65a-2fcb-441d-aef7-90d9f02326f7",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://eu-documentai.googleapis.com/v1/projects/striped-century-452610-e5/locations/eu/processors/71d6baa3207f4df0:process",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"rawDocument\": {\n    \"mimeType\": \"application/pdf\",\n    \"content\": \"{{ $json.data }}\"\n  },\n  \"skipHumanReview\": true\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        -20
+      ],
+      "id": "dd566b38-a5b3-4e9f-8bcc-e80d12a52ce8",
+      "name": "HTTP Request3",
+      "credentials": {
+        "googleApi": {
+          "id": "t1ildCohVpEI4zFc",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.score_global.valeur }}",
+                    "rightValue": "={{ $json.score_global.total }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "7d50af4c-6aee-4e80-8501-c86f81533b0b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "max"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a402c00c-e45e-497e-8cd3-6c45f0ed505a",
+                    "leftValue": "={{ $json.score_global.valeur }}",
+                    "rightValue": "={{ $json.score_global.total }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "moyen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "78993c23-7c62-4005-b110-86d9fda18ad6",
+                    "leftValue": "={{ $json.score_poids }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "lourd"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1dcae8e6-3940-4621-ae7d-d4b92e504516",
+                    "leftValue": "={{ $json.score_global.valeur }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "zero"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        120,
+        240
+      ],
+      "id": "42cab330-4635-42b5-8529-c06f933f8374",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Votre CV n'est pas traitable"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        520,
+        740
+      ],
+      "id": "e2a2b4d2-8a65-4c7d-8d16-b5b329a39aed",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "content": "## Gestions des erreurs\n\n \n",
+        "height": 260,
+        "width": 280,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        640
+      ],
+      "id": "d0e878c5-902e-40f4-9682-8bc8b8117930",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5a150bc-eb52-4bb7-90ae-cce441970c5b",
+              "name": "text",
+              "value": "={{ $json.document.text }} || {{ $json.text }} ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1480,
+        -220
+      ],
+      "id": "ecca15ca-0c1c-451f-9cc6-d39bb5b9bb90",
+      "name": "Texte"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check OCR Result": {
+      "main": [
+        [
+          {
+            "node": "Texte",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log (PDF)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Check OCR Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check OCR Result1": {
+      "main": [
+        [
+          {
+            "node": "Texte",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log (PDF)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF Text1": {
+      "main": [
+        [
+          {
+            "node": "Texte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Check OCR Result1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF Text1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "76cb53fe-b1bd-4f12-9d3a-97d366672499",
+  "meta": {
+    "instanceId": "782dc3894978243c9249feb320237edba54104afeb26422ad7d68468d824fd16"
+  },
+  "id": "Gvh5hhOVOR3vbZc9",
+  "tags": []
+}

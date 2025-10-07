@@ -1,0 +1,488 @@
+{
+  "name": "DOCX",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": " https://api.cloudmersive.com/convert/docx/to/pdf",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Apikey ",
+              "value": "36dafade-1575-459d-9d77-172cde5d34b5"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "document ",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        220
+      ],
+      "id": "89ddb212-c057-4c55-99ed-2444f86a1957",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "content": "## DOCX\nCloudmersive. Celui qui avait l'air le plus RGPD friendly\n\n \n",
+        "height": 460,
+        "width": 1560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        -440
+      ],
+      "id": "f91e5753-719d-4dfd-afb1-6cd78e89ca92",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Gestions des erreurs\n\n \n",
+        "height": 260,
+        "width": 280,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -160
+      ],
+      "id": "f2682ac7-995c-4743-9ce7-e8940bcab89e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": " https://api.cloudmersive.com/convert/docx/to/txt",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Apikey ",
+              "value": "36dafade-1575-459d-9d77-172cde5d34b5"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "document ",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        -280
+      ],
+      "id": "1bd215b7-54ea-41bc-96e5-a1a72b523b48",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "93af781c-215b-418e-8c7c-3bc57de9835c",
+              "leftValue": "={{ $json.TextResult }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        -280
+      ],
+      "id": "6e5ea0f5-e1ee-49f0-a9ee-166fbde19956",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "error_message",
+              "value": "=Le Cv n'a pas pu être analysé"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "19beba0f-b132-420c-a6fb-b1884c2cc3f9",
+      "name": "Prepare Error Log (PDF)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -60
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "content": "## Backup Via Google Document AI\n\n\n \n",
+        "height": 280,
+        "width": 540,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        140
+      ],
+      "id": "f7824096-e45f-488b-aab4-98b02ec483b7",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cd9fb7d7-640e-46d1-b3bc-bc2888ac82eb",
+                    "leftValue": "={{ $json.score_global.valeur }}",
+                    "rightValue": 5.3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bon"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "78993c23-7c62-4005-b110-86d9fda18ad6",
+                    "leftValue": "={{ $json.score_poids }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "lourd"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1dcae8e6-3940-4621-ae7d-d4b92e504516",
+                    "leftValue": "={{ $json.score_global.valeur }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "zero"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -420,
+        -160
+      ],
+      "id": "12eae6be-5b3a-43c2-a62a-27c0e6bec122",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Votre CV n'est pas traitable"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        180
+      ],
+      "id": "fb4c7402-9986-4fc4-8887-b1e62ad320ba",
+      "name": "Stop and Error1"
+    },
+    {
+      "parameters": {
+        "content": "## Gestions des erreurs\n\n \n",
+        "height": 220,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        100
+      ],
+      "id": "97faf10b-a42a-4292-a261-e1d741b78e16",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -680,
+        -160
+      ],
+      "id": "16a8b389-5591-4339-9248-7b9b954c0d1b",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "OeN4HCsa9pypOreW",
+          "mode": "list",
+          "cachedResultName": "Recup_PDF"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        340,
+        220
+      ],
+      "id": "4ca77e96-76e4-4a44-9f6b-610d5019cb69",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"TextResult\"] || $json.document.text }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "be29ed8c-1277-4f0a-81b9-c149e4a7d80d",
+      "name": "Check DOCX Text1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -300
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1c22371f-1d61-43db-b0d2-ee50b533f801",
+              "name": "text",
+              "value": "={{$json[\"TextResult\"] || $json.document.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        -320
+      ],
+      "id": "82463332-aa14-424f-aa4d-f23c8b4816de",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Check DOCX Text1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check DOCX Text1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log (PDF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4efdfd1a-67f6-47f6-9e4c-596e917427d4",
+  "meta": {
+    "instanceId": "782dc3894978243c9249feb320237edba54104afeb26422ad7d68468d824fd16"
+  },
+  "id": "pRq2IdnxtyfrNMPW",
+  "tags": []
+}

@@ -1,0 +1,339 @@
+{
+  "name": "PNG",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        200
+      ],
+      "id": "79adf2c5-f05c-4560-a1cf-74920f86a79f",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        580,
+        180
+      ],
+      "id": "4665c40c-c344-4a6e-9bed-273321890333",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://eu-documentai.googleapis.com/v1/projects/striped-century-452610-e5/locations/eu/processors/71d6baa3207f4df0:process",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"rawDocument\": {\n    \"mimeType\": \"image/png\",\n    \"content\": \"{{ $json.data }}\"\n  },\n  \"skipHumanReview\": true\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        780,
+        160
+      ],
+      "id": "503474a8-303a-4ec1-8644-27d5aa974d4d",
+      "name": "HTTP Request4",
+      "credentials": {
+        "googleApi": {
+          "id": "t1ildCohVpEI4zFc",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb2c6872-7cea-437b-9992-ba2038cbce20",
+              "name": "=text",
+              "value": "={{$json.text ||  $json.document.text }}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1300,
+        160
+      ],
+      "id": "4d1efc71-2fe2-45e1-91c0-b2a020b1f12c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "error_message",
+              "value": "=Le Cv n'a pas pu être analysé"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "524f5dcc-00e9-4d47-981a-6f5285e93f9a",
+      "name": "Prepare Error Log (PDF)2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        420
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "content": "## Gestions des erreurs\n\n \n",
+        "height": 260,
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        340
+      ],
+      "id": "fec63466-8cb8-436b-a716-adc6e181daff",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Image PNG \n\nVia Google Document AI\n \n",
+        "height": 560,
+        "width": 1560,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "98521015-8cba-4686-8591-652f4daec503",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cd9fb7d7-640e-46d1-b3bc-bc2888ac82eb",
+                    "leftValue": "={{ $json.score_global.valeur }}",
+                    "rightValue": 3.5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bon"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1dcae8e6-3940-4621-ae7d-d4b92e504516",
+                    "leftValue": "={{ $json.score_global.valeur }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "zero"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        280,
+        200
+      ],
+      "id": "436c3bab-4e93-4e51-94fb-232862e9ee0c",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "errorMessage": "oupsy"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        460,
+        440
+      ],
+      "id": "944ceca5-3a34-4682-8edc-40ccffa432ec",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "130402a6-6949-4a4e-8471-50c607ae3a8b",
+              "leftValue": "={{$json.text ||  $json.document.text }}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        180
+      ],
+      "id": "27cd8f76-d566-454e-8be2-4e2621d6369e",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log (PDF)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1ed7697c-25b6-4a05-b44e-e368f2dd00a8",
+  "meta": {
+    "instanceId": "782dc3894978243c9249feb320237edba54104afeb26422ad7d68468d824fd16"
+  },
+  "id": "yhJMRGirxRq5LS4w",
+  "tags": []
+}
